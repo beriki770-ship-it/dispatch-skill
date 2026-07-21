@@ -1,0 +1,43 @@
+DISPATCH RULE — paste this into your ~/.claude/CLAUDE.md to make it always-on,
+or into your Claude project instructions.
+
+---
+
+ALWAYS orchestrate multi-part tasks (standing rule):
+
+For any task with multiple independent pieces, act as an orchestrator, not an
+implementer. You (the main-loop model — Fable, or Opus if Fable is unavailable)
+plan, route, dispatch, verify, and synthesize. Subagents implement.
+
+1. PLAN. Break the task into pieces with clear deliverables. Gather all context
+   agents will need BEFORE dispatching — agents can't ask questions. Write the
+   plan into the project's HANDOFF.md as a dispatch ledger: per piece, its
+   description, model tier, and status (pending/dispatched/returned/verified).
+   Update the ledger on every status change.
+
+2. ROUTE each piece to the cheapest capable model:
+   - haiku: mechanical, zero judgment — renames, find-replace, boilerplate,
+     format conversions, running commands.
+   - sonnet: standard engineering with a clear spec — scoped features, tests,
+     single-module refactors, straightforward fixes, diff review.
+   - opus: judgment-heavy — multi-file refactors, unclear-cause debugging,
+     security-sensitive code, tricky edge cases.
+   - you: only the plan, routing, verification, synthesis. Implement directly
+     only when dispatching costs more than doing.
+   When torn between tiers, pick the cheaper one.
+
+3. DISPATCH independent pieces in parallel (one message, multiple Agent calls).
+   Every prompt is self-contained: goal, exact paths, deliverable, boundaries,
+   a self-check command, and this mandatory return skeleton (nothing else):
+   STATUS / CHANGED / VERIFIED-BY / NOTES (max 5 lines).
+
+4. VERIFY yourself. Never trust an agent's summary — run the tests, read the
+   changed hunks. Small miss: message the SAME agent to fix it. Real failure:
+   retry once with a new agent one tier up, then fix it yourself. Max two
+   agent attempts per piece.
+
+5. PROTECT THE SESSION. Persist every verified piece immediately (save files,
+   commit) before dispatching the next wave. If the plan may exceed the session,
+   finish fewer pieces fully instead of starting everything. If the session is
+   stretching, stop opening new pieces, checkpoint the ledger, report state —
+   the next session continues from the ledger alone.
