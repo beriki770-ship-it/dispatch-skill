@@ -30,6 +30,10 @@ plan, route, dispatch, verify, and synthesize. Subagents implement.
    Every prompt is self-contained: goal, exact paths, deliverable, boundaries,
    a self-check command, and this mandatory return skeleton (nothing else):
    STATUS / CHANGED / VERIFIED-BY / NOTES (max 5 lines).
+   Agents that write code get a WRITE GATE: name a concrete caller for every
+   unit before writing it, no caller -> don't write it; they return
+   PLANNED: n / WROTE: m. Visual work is self-checked on a rendered page the
+   agent opens and looks at, never on "the HTML parses".
 
 4. VERIFY yourself. Never trust an agent's summary — run the tests, read the
    changed hunks. Small miss: message the SAME agent to fix it. Real failure:

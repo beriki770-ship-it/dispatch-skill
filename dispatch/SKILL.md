@@ -43,7 +43,20 @@ Every dispatch prompt must be self-contained — the agent has none of this conv
 - **Context** — exact file paths, project conventions to follow, relevant facts from the handoff file.
 - **Deliverable** — exactly what to produce (files edited, data returned as raw text).
 - **Boundaries** — what NOT to touch.
-- **Self-check** — a command the agent should run to verify itself (build, test, lint) before returning.
+- **Write gate** — if the agent may write code, paste this block verbatim (agents can't load skills, and unrequested code is the main source of garbage in a fan-out):
+
+  ```
+  WRITE GATE — before you write any code:
+  List every unit you intend to write (file / function / route / config key / dependency).
+  For each, name the CONCRETE caller that will reach it (file:line, route, entry point)
+  or the line of this task that asks for it verbatim. No named caller → do not write it.
+  Prefer editing existing code over adding a file. Zero new code is a valid outcome.
+  Never cut error handling on things that really fail, input validation, or accessibility.
+  Report: PLANNED: <n units> / WROTE: <m units> — one line per unit with its caller.
+  ```
+
+  Reject a return that doesn't carry `PLANNED / WROTE`.
+- **Self-check** — a command the agent should run to verify itself (build, test, lint) before returning. **For anything visual, the self-check must be a rendered page the agent reads back with its own eyes** — scrolled viewport screenshots it actually opens, plus computed styles (`getComputedStyle`) on text and its background. Tag-balance checks, "0 external refs" and valid-HTML parses are NOT verification: in one measured run an agent passed all of those and shipped body text the same colour as its card background, a block at near-zero contrast, and a contact form that silently discarded every submission. Don't trust a bare `chrome --headless --screenshot` on animated content either (it can capture before the animation lands) — drive the browser over CDP, or scroll and re-capture. Agents must never kill a shared process such as the user's browser.
 - **Return format** — end every prompt by dictating this exact skeleton as the ONLY thing the agent returns:
 
   ```
