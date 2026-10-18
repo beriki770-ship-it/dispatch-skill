@@ -1,0 +1,300 @@
+[
+ {
+  "name": "fable-noskill",
+  "fixed": 15,
+  "cost": 4.0575705,
+  "secs": "287",
+  "agents": 0,
+  "agent_models": [],
+  "missed": [
+   "B05"
+  ]
+ },
+ {
+  "name": "fable-noskill-r2",
+  "fixed": 15,
+  "cost": 4.690634749999998,
+  "secs": "708",
+  "agents": 0,
+  "agent_models": [],
+  "missed": [
+   "B05"
+  ]
+ },
+ {
+  "name": "fable-noskill-r3",
+  "fixed": 15,
+  "cost": 4.0782402499999995,
+  "secs": "312",
+  "agents": 0,
+  "agent_models": [],
+  "missed": [
+   "B05"
+  ]
+ },
+ {
+  "name": "fable-skill",
+  "fixed": 16,
+  "cost": 5.395934700000001,
+  "secs": "351",
+  "agents": 3,
+  "agent_models": [
+   "opus",
+   "opus",
+   "opus"
+  ],
+  "missed": []
+ },
+ {
+  "name": "fable-skill-r2",
+  "fixed": 16,
+  "cost": 6.177204199999999,
+  "secs": "1536",
+  "agents": 4,
+  "agent_models": [
+   "sonnet",
+   "sonnet",
+   "opus",
+   "sonnet"
+  ],
+  "missed": []
+ },
+ {
+  "name": "fable-skill-r3",
+  "fixed": 16,
+  "cost": 6.108750949999999,
+  "secs": "515",
+  "agents": 3,
+  "agent_models": [
+   "opus",
+   "opus",
+   "opus"
+  ],
+  "missed": []
+ },
+ {
+  "name": "haiku-noskill",
+  "fixed": 14,
+  "cost": 0.16820108,
+  "secs": "161",
+  "agents": 0,
+  "agent_models": [],
+  "missed": [
+   "B05",
+   "B15"
+  ]
+ },
+ {
+  "name": "haiku-noskill-r2",
+  "fixed": 15,
+  "cost": 0.26235394,
+  "secs": "888",
+  "agents": 0,
+  "agent_models": [],
+  "missed": [
+   "B05"
+  ]
+ },
+ {
+  "name": "haiku-noskill-r3",
+  "fixed": 15,
+  "cost": 0.25924189999999997,
+  "secs": "250",
+  "agents": 0,
+  "agent_models": [],
+  "missed": [
+   "B05"
+  ]
+ },
+ {
+  "name": "haiku-skill",
+  "fixed": 15,
+  "cost": 0.19953921,
+  "secs": "179",
+  "agents": 0,
+  "agent_models": [],
+  "missed": [
+   "B05"
+  ]
+ },
+ {
+  "name": "haiku-skill-r2",
+  "fixed": 15,
+  "cost": 0.28205438,
+  "secs": "511",
+  "agents": 0,
+  "agent_models": [],
+  "missed": [
+   "B05"
+  ]
+ },
+ {
+  "name": "haiku-skill-r3",
+  "fixed": 15,
+  "cost": 0.24880116000000002,
+  "secs": "226",
+  "agents": 0,
+  "agent_models": [],
+  "missed": [
+   "B05"
+  ]
+ },
+ {
+  "name": "opus-noskill",
+  "fixed": 15,
+  "cost": 1.4450978,
+  "secs": "162",
+  "agents": 0,
+  "agent_models": [],
+  "missed": [
+   "B05"
+  ]
+ },
+ {
+  "name": "opus-noskill-r2",
+  "fixed": 15,
+  "cost": 1.9203963999999998,
+  "secs": "591",
+  "agents": 0,
+  "agent_models": [],
+  "missed": [
+   "B05"
+  ]
+ },
+ {
+  "name": "opus-noskill-r3",
+  "fixed": 16,
+  "cost": 1.5137866,
+  "secs": "221",
+  "agents": 0,
+  "agent_models": [],
+  "missed": []
+ },
+ {
+  "name": "opus-skill",
+  "fixed": 16,
+  "cost": 2.775752000000001,
+  "secs": "323",
+  "agents": 4,
+  "agent_models": [
+   "opus",
+   "sonnet",
+   "sonnet",
+   "sonnet"
+  ],
+  "missed": []
+ },
+ {
+  "name": "opus-skill-r2",
+  "fixed": 16,
+  "cost": 4.889092000000001,
+  "secs": "1464",
+  "agents": 4,
+  "agent_models": [
+   "opus",
+   "opus",
+   "opus",
+   "sonnet"
+  ],
+  "missed": []
+ },
+ {
+  "name": "opus-skill-r3",
+  "fixed": 16,
+  "cost": 4.216273,
+  "secs": "550",
+  "agents": 4,
+  "agent_models": [
+   "opus",
+   "opus",
+   "opus",
+   "sonnet"
+  ],
+  "missed": []
+ },
+ {
+  "name": "sonnet-noskill",
+  "fixed": 8,
+  "cost": 0.3619455,
+  "secs": "66",
+  "agents": 0,
+  "agent_models": [],
+  "missed": [
+   "B02",
+   "B04",
+   "B05",
+   "B08",
+   "B13",
+   "B14",
+   "B15",
+   "B16"
+  ]
+ },
+ {
+  "name": "sonnet-noskill-r2",
+  "fixed": 8,
+  "cost": 0.3753545,
+  "secs": "86",
+  "agents": 0,
+  "agent_models": [],
+  "missed": [
+   "B02",
+   "B04",
+   "B05",
+   "B08",
+   "B13",
+   "B14",
+   "B15",
+   "B16"
+  ]
+ },
+ {
+  "name": "sonnet-noskill-r3",
+  "fixed": 15,
+  "cost": 0.6831493,
+  "secs": "174",
+  "agents": 0,
+  "agent_models": [],
+  "missed": [
+   "B05"
+  ]
+ },
+ {
+  "name": "sonnet-skill",
+  "fixed": 15,
+  "cost": 0.7185950999999999,
+  "secs": "160",
+  "agents": 0,
+  "agent_models": [],
+  "missed": [
+   "B05"
+  ]
+ },
+ {
+  "name": "sonnet-skill-r2",
+  "fixed": 16,
+  "cost": 0.6917761000000001,
+  "secs": "261",
+  "agents": 0,
+  "agent_models": [],
+  "missed": []
+ },
+ {
+  "name": "sonnet-skill-r3",
+  "fixed": 8,
+  "cost": 0.4056287,
+  "secs": "149",
+  "agents": 0,
+  "agent_models": [],
+  "missed": [
+   "B02",
+   "B04",
+   "B05",
+   "B08",
+   "B13",
+   "B14",
+   "B15",
+   "B16"
+  ]
+ }
+]

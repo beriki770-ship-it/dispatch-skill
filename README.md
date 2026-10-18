@@ -1,96 +1,89 @@
-# Dispatch — your top model plans, cheaper agents do the work
+# Dispatch: cheap agents do the simple work, Opus only gets the hard part
 
-A rule for Claude Code that turns any multi-part task into an orchestrated one:
-the main model (Fable, or Opus if that's what you run) breaks the task down, then
-sends each piece to a subagent on the cheapest model that can handle it — Haiku
-for mechanical work, Sonnet for standard engineering, Opus for the hard parts.
-Independent pieces run in parallel. The orchestrator verifies everything itself
-before saying "done".
+A Claude Code plugin with one skill and three agents. Your main model plans the job. Haiku agents sweep the whole scope and fix the simple things, and one Opus agent gets only the hard list, then reviews the whole diff.
 
-Three things you get out of it:
+I tested it rather than guessing. 45 runs on a 50-file repo with 16 planted bugs, a hidden judge, and one vague instruction: "go through the code and fix the bugs".
 
-- **Lower cost.** Opus-level reasoning only where it's needed; the bulk runs on
-  Sonnet and Haiku.
-- **A clean main conversation.** Agents do the heavy file-reading in their own
-  disposable context and return a four-line structured result. Your session
-  doesn't fill up with noise.
-- **Crash-proof progress.** Every dispatch keeps a ledger in the project's
-  `HANDOFF.md`, updated on every status change, and each verified piece is saved
-  to disk immediately. If the session hits its limit mid-task, a fresh session
-  reads the ledger and continues — nothing is lost.
-
-There are two ways to install it. **Option A is the reliable one.**
-
----
-
-## Option A — always-on rule (recommended)
-
-Works in **Claude Code** (CLI, desktop app, or claude.ai/code).
-
-1. Open (or create) `~/.claude/CLAUDE.md`
-   - Windows: `C:\Users\<you>\.claude\CLAUDE.md`
-   - Mac/Linux: `~/.claude/CLAUDE.md`
-2. Paste in the block from `PROMPT.txt` (the part below the `---` line).
-3. Done. It applies to every multi-part task in every session, automatically.
-
-## Option B — install as a skill
-
-Also for Claude Code. Skills load when Claude decides they're relevant, so this
-is slightly less bulletproof than Option A — but it carries the full playbook
-(routing table, escalation ladder, session-survival rules) in more detail.
-
-1. Copy the `dispatch` folder into `~/.claude/skills/` so you end up with:
-   `~/.claude/skills/dispatch/SKILL.md`
-2. (Recommended) Add this line to your `~/.claude/CLAUDE.md` so it truly always
-   applies:
-
-   ```
-   # dispatch
-   For ANY multi-part task, follow ~/.claude/skills/dispatch/SKILL.md as the
-   default operating mode — no need to be asked.
-   ```
-
-Best of both: do A **and** B. The CLAUDE.md block guarantees the behavior; the
-skill file supplies the full detail when it loads.
-
-## Which model is "the orchestrator"?
-
-Whatever runs your main conversation — Fable, Opus, Sonnet or Haiku. The tier
-of each subagent is picked from its piece of work, never from the orchestrator,
-so any main model can dispatch any tier, including ones above itself: Haiku
-sends Opus, and Opus sends Fable for hours-long autonomous units or once Opus itself has failed. If the main model
-is weaker than the job (running Haiku as the main loop on a real refactor,
-say), it hands the plan and the final review up to a stronger agent and keeps
-only the bookkeeping. If a tier isn't available on your account, it uses the
-next one down and says so.
-
-## Measured, not guessed
-
-The routing was tuned on a benchmark: a 50-file repo with 16 seeded bugs and a
-hidden judge, one vague line ("fix the bugs"), four main models with and
-without the skill, three runs each (24 runs). Mean bugs fixed out of 16:
-
-| Main loop | Without skill | With skill |
+| Setup | Bugs fixed (of 16, mean of 3 runs) | Cost per run |
 |---|---|---|
-| Haiku | 14.7 ($0.23) | 15.0 ($0.24) |
-| Sonnet | 10.3 ($0.47) | 13.0 ($0.61) |
-| Opus | 15.3 ($1.63) | **16.0 every run ($3.96)** |
-| Fable | 15.0 ($4.28) | 16.0 ($5.89) |
+| Opus alone | 15.3 (missed bugs in 2 of 3 runs) | $1.63 |
+| **Opus + Dispatch** | **16.0, every run** | **$2.33** |
+| Haiku alone | 14.7 | $0.23 |
+| **Haiku + Dispatch (always-on)** | **15.7** | **$1.55** |
+| Fable alone | 15.0 | $4.28 |
 
-What changed because of it: Haiku and Sonnet main loops never dispatched on
-their own, so the skill now forces an Opus review on big or security-touching
-jobs; Fable was demoted to "only for multi-hour autonomous units or after Opus failed"; Haiku got wider work
-wherever the result can be checked; and every fix agent is told that green
-tests are not the finish line. It's one synthetic JavaScript repo and three runs
-per cell, so read it as a direction, not a law.
+- **The most reliable setup:** Opus with Dispatch found all 16 bugs in all 12 of its runs, across three versions of the skill. Opus alone found all 16 in only 1 of 3.
+- **The best value:** Haiku as the main model with Dispatch matched Opus alone (15.7 vs 15.3) for slightly less ($1.55 vs $1.63). Haiku does the volume, and Dispatch brings Opus in exactly once.
+- **Don't run it on Fable:** it cost more than Opus and scored lower.
+
+## Install
+
+**Plugin**, one command (needs Claude Code 2.1.292+ in the shell, 2.1.275+ inside a session):
+
+```
+claude plugin install dispatch --marketplace beriki770-ship-it/dispatch-skill
+```
+
+Or inside a session:
+
+```
+/plugin marketplace add beriki770-ship-it/dispatch-skill
+/plugin install dispatch@dispatch-skill
+```
+
+**Make it always-on.** This is recommended, and essential if your main model is Haiku or Sonnet. A plugin skill loads only when Claude decides it's relevant. Opus picked it up on its own in every run, but Haiku didn't pick it up in any of them. Keep the plugin installed (the pinned agents live there) and paste the block from `PROMPT.txt` into `~/.claude/CLAUDE.md`. The benchmark's "always-on" rows used the full skill pinned to the system prompt; `PROMPT.txt` is its condensed form and wasn't benchmarked on its own.
+
+**Manual install** if you don't use plugins: copy `skills/dispatch/` to `~/.claude/skills/dispatch/` and `agents/*.md` to `~/.claude/agents/`. Agents installed this way are called `sweeper`, `deep` and `reviewer`, without the `dispatch:` prefix.
+
+## What's inside
+
+- **`skills/dispatch/SKILL.md`** is the playbook:
+  - the measured routing table
+  - the "split by difficulty, never by folder" rule
+  - a hard trigger that makes Haiku and Sonnet call Opus on big or security-touching jobs
+  - a 150-turn cap per agent
+  - a 4-line return format
+  - a dispatch ledger, so a crashed session resumes where it stopped
+- **The agents have their models pinned in the frontmatter**, so the right model runs even when the main loop forgets to pass `model`:
+
+  | Agent | Model | Job |
+  |---|---|---|
+  | `dispatch:sweeper` | Haiku | Fixes mechanical and checkable issues across the whole scope. Returns a HARD list. |
+  | `dispatch:deep` | Opus | Fixes only the HARD list, then reviews the full diff and hunts for misses. |
+  | `dispatch:reviewer` | Sonnet | A mid-price diff review for jobs that didn't need a deep pass. |
+- **`PROMPT.txt`** is the always-on version, short enough to paste into `CLAUDE.md`.
+- **`bench/`** holds the whole benchmark: the repo, the hidden judge, the reference fix, the runner and the raw results. You can rerun every number above yourself.
+
+## How it got here
+
+The first version made things worse, and the benchmark showed why:
+
+1. **v1: "route by tier".**
+   - Opus + skill reached 16/16, but at $3.96, 2.4x the cost of Opus alone.
+   - Across 24 runs, 22 agents were dispatched: 14 Opus, 8 Sonnet, **0 Haiku**. Opus split the work by folder, every folder held a hard bug, so every folder went to Opus.
+   - Haiku and Sonnet as main models sent zero agents in 12 runs, with or without the skill.
+2. **v2: split by difficulty, plus pinned agents.**
+   - Haiku sweepers started doing the volume, for 6 to 16 cents per run.
+   - Opus still cost $3.38, because it ran several Opus agents plus a Sonnet reviewer.
+3. **v2.1: exactly one Opus pass.**
+   - $2.33 with 16/16 every run.
+   - The hard trigger fired in 3 of 3 Haiku runs, up from 2 of 3.
+
+The money is almost all in Opus contexts. The Haiku stage costs cents. So the lever is how many times Opus has to load the job, and Dispatch now makes that once.
+
+## Honest limits
+
+- It's one synthetic JavaScript repo with three runs per cell. Treat it as a direction, not a law, and rerun `bench/` on your own kind of work.
+- My own global `CLAUDE.md` loaded in every run, because Claude Code has no switch to turn it off. Your numbers will shift.
+- Costs are what Claude Code reports (`total_cost_usd`, subagents included). On a subscription they're an API-price estimate.
+- On small jobs, a few files or one dependent chain, Dispatch tells the model not to dispatch at all. Anthropic's own measurements say a single model wins there. See the "When NOT to use this" section of the skill.
+
+Benchmark total: 45 runs, $93.82.
 
 ## Pairs well with
 
-[handoff-skill](https://github.com/beriki770-ship-it/handoff-skill) — the
-dispatch ledger lives in the `HANDOFF.md` file that skill maintains. Together:
-orchestrated execution + zero context loss between sessions.
+[handoff-skill](https://github.com/beriki770-ship-it/handoff-skill). The dispatch ledger lives in the `HANDOFF.md` that skill maintains.
 
-## Requirements
+## License
 
-Claude Code with subagents (the Agent tool). The Workflow section only applies
-if your environment has the Workflow tool — everything else works without it.
+MIT. Built by [Wild Digital Moments](https://digital.wildmoments.at/).

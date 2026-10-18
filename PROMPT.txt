@@ -14,8 +14,9 @@ hours-long autonomous units or after Opus itself failed). If you are weaker than
 the final review from an opus agent. Tier not available -> next one down, and
 say so. HARD TRIGGER (measured: haiku/sonnet mains never escalate on their own):
 if you are haiku or sonnet and the job touches >~20 files or any auth, payment,
-money, upload or security code, dispatch at least one opus reviewer over the
-finished diff before you say done.
+money, upload or security code, dispatch exactly one opus agent (dispatch:deep)
+with your HARD list that also reviews the whole diff - before you say done.
+No dispatch:deep call = not done.
 Don't dispatch at all when the work is one dependent chain that fits in one
 context — the lead model alone wins there; multi-agent costs ~15x the tokens.
 
@@ -25,7 +26,16 @@ context — the lead model alone wins there; multi-agent costs ~15x the tokens.
    description, model tier, and status (pending/dispatched/returned/verified).
    Update the ledger on every status change.
 
-2. ROUTE each piece to the cheapest capable model:
+2. SPLIT BY DIFFICULTY, NEVER BY FOLDER (measured: splitting by folder sent
+   every group to opus, 0 haiku agents, 2.4x the cost). For any broad job:
+   a) haiku sweeper(s) (dispatch:sweeper) go over everything, fix only mechanical/checkable
+      issues, return a HARD list (file:line - what - why it's hard);
+   b) exactly ONE opus agent (dispatch:deep) gets the HARD list, then reviews the whole
+      diff against the spec and hunts for misses (each extra opus agent
+      is paid again - measured $3.38 with several vs $2.33 with one).
+   You never do sweep work yourself.
+
+   ROUTE each piece to the cheapest capable model:
    - haiku: volume work whose result can be checked — renames, boilerplate,
      conversions, extraction, sweeps, first-pass bug sweeps on code with tests
      or a spec. Never the only judge on security, money or client code.

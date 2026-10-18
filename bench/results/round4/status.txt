@@ -1,0 +1,3 @@
+haiku-always-r1 exit=0 secs=336
+haiku-always-r2 exit=0 secs=436
+haiku-always-r3 exit=0 secs=1486

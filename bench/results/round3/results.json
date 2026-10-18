@@ -1,0 +1,75 @@
+[
+ {
+  "name": "haiku-plugin-r1",
+  "fixed": 15,
+  "cost": 0.23111791,
+  "secs": "208",
+  "agents": 0,
+  "agent_models": [],
+  "missed": [
+   "B05"
+  ]
+ },
+ {
+  "name": "haiku-plugin-r2",
+  "fixed": 15,
+  "cost": 0.23293060000000002,
+  "secs": "236",
+  "agents": 0,
+  "agent_models": [],
+  "missed": [
+   "B05"
+  ]
+ },
+ {
+  "name": "haiku-plugin-r3",
+  "fixed": 14,
+  "cost": 0.19288202000000004,
+  "secs": "142",
+  "agents": 0,
+  "agent_models": [],
+  "missed": [
+   "B05",
+   "B16"
+  ]
+ },
+ {
+  "name": "opus-plugin-r1",
+  "fixed": 16,
+  "cost": 2.4548780800000003,
+  "secs": "531",
+  "agents": 3,
+  "agent_models": [
+   "haiku",
+   "haiku",
+   "opus"
+  ],
+  "missed": []
+ },
+ {
+  "name": "opus-plugin-r2",
+  "fixed": 16,
+  "cost": 2.40127131,
+  "secs": "465",
+  "agents": 3,
+  "agent_models": [
+   "haiku",
+   "haiku",
+   "opus"
+  ],
+  "missed": []
+ },
+ {
+  "name": "opus-plugin-r3",
+  "fixed": 16,
+  "cost": 2.1371580150000002,
+  "secs": "378",
+  "agents": 3,
+  "agent_models": [
+   "haiku",
+   "haiku",
+   "opus"
+  ],
+  "missed": []
+ }
+]

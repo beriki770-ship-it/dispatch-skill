@@ -1,6 +1,6 @@
 ---
 name: dispatch
-description: The orchestrator plans, cheaper agents execute. For any multi-part task, whatever model runs the main loop (Fable, Opus, Sonnet or even Haiku) stays the planner/orchestrator and dispatches subagents, each on the model tier that fits its piece — Haiku for checkable volume work, Sonnet for spec'd engineering, Opus for judgment (and the default when unsure), Fable only for multi-hour autonomous units or after Opus failed. The tier follows the task, never the orchestrator: any main model can send any tier, including tiers above itself. Tuned on a measured 24-run benchmark and Anthropic's published cost data. Independent pieces run in parallel; the orchestrator verifies everything before reporting done. Also keeps the main conversation's context lean, and checkpoints all dispatch state to a file so a compacted or interrupted session loses no work.
+description: Use for any job broader than one file - "fix the bugs", "go through the code", audit or review a repo or site, migrate or refactor many files, multi-part features, research across many sources. Splits the work by difficulty: cheap Haiku agents (dispatch:sweeper) do the simple, checkable part and write a HARD list; exactly one Opus agent (dispatch:deep) fixes the HARD list and reviews the whole diff. Any main model (Haiku to Fable) can dispatch any tier. Includes the measured routing table (45-run benchmark), a turn cap, a 4-line return format and a crash-proof ledger.
 ---
 
 # dispatch — the orchestrator plans, agents execute
@@ -14,7 +14,7 @@ The orchestrator's job in this mode is thinking, not typing: decompose, route, d
 - **Dispatch upward freely.** A Haiku or Sonnet main loop sends Opus; Opus sends Fable when Opus itself has failed on the piece. The orchestrator's own tier is never a ceiling.
 - **No inflation, no deflation.** An expensive orchestrator still sends renames to Haiku; a cheap one never sends a security fix to Haiku because that's "its level".
 - **Orchestrator weaker than the task?** If the main loop sits below the hardest judgment in the job (e.g. Haiku or Sonnet running a multi-part refactor), it delegates the thinking upward too: the **plan** comes from an Opus planner agent (Fable only if Opus has failed), and the **final review** from an agent at least as strong as the hardest piece. The main loop then runs the ledger, dispatches and checks evidence mechanically. Running a weak main loop this way costs one extra planner call, which is still cheaper than a wrong plan.
-- **Hard trigger, because weak mains don't escalate on their own.** Measured: in 12 runs of a vague one-line "fix the bugs" on a 50-file repo, Haiku and Sonnet main loops dispatched **zero** agents, with or without this skill — they named the right routing when asked, and still worked solo. So it is not left to judgment: a Haiku or Sonnet main loop whose job touches **more than ~20 files, or any auth / payment / money / upload / security code**, MUST dispatch at least one **Opus reviewer** over the finished diff before reporting done.
+- **Hard trigger, because weak mains don't escalate on their own.** Measured: in 12 runs of a vague one-line "fix the bugs" on a 50-file repo, Haiku and Sonnet main loops dispatched **zero** agents, with or without this skill — they named the right routing when asked, and still worked solo. So it is not left to judgment: a Haiku or Sonnet main loop whose job touches **more than ~20 files, or any auth / payment / money / upload / security code**, MUST dispatch exactly one `dispatch:deep` agent (Opus) with its HARD list and the instruction to review the whole diff, before reporting done. Measured: with v2 wording it fired in 2 of 3 Haiku runs, with this v2.1 wording in 3 of 3 — still, treat it as a checklist item, not a suggestion: **no `dispatch:deep` call in the transcript = not done.**
 - **Tier unavailable** (the alias is rejected, the account doesn't have it) → use the next tier down that exists and note the substitution in the ledger. Never silently drop to the bottom.
 
 ## When NOT to use this
@@ -27,17 +27,34 @@ The orchestrator's job in this mode is thinking, not typing: decompose, route, d
 ## The flow
 
 1. **Plan.** Break the task into concrete pieces with clear deliverables. Identify which pieces are independent (parallel) and which depend on others (sequential). Gather any context agents will need BEFORE dispatching — agents cannot ask questions. Write the plan into a **dispatch ledger** in the project's `HANDOFF.md` (see Session survival) before firing.
-2. **Route.** Assign each piece a model tier using the table below. When torn between two tiers, take the cheaper one — the escalation ladder catches failures.
+2. **Route.** Assign each piece a model tier using the table below. When torn between two tiers, take the cheaper one — the escalation ladder catches failures. **Split by difficulty, never by location** (next section) — this is where the savings come from.
 3. **Gate.** Small dispatch (≤5 agents, at most one Opus) → fire immediately, no ceremony. Bigger than that → show the user the plan first: pieces, tiers, rough scale. One short message, then wait for their go.
 4. **Dispatch.** Independent pieces: multiple Agent calls in ONE message so they run concurrently. Dependent pieces: wait for the prerequisite, feed its result into the next prompt. Long-running pieces go `run_in_background` so orchestration never stalls. File conflicts: first choice is assigning agents **disjoint file sets** in the same tree — no isolation needed; only when two agents genuinely must touch the same files, give them `isolation: "worktree"`, and the orchestrator owns merging the worktrees back afterward.
-5. **Verify.** Never trust an implementer's own summary. Breadth goes to a cheap **reviewer agent** (Sonnet): it reads the implementer's diff against the piece's goal and returns a short verdict. The orchestrator still runs the build/tests itself and spot-checks the critical hunks directly. UI changes get clicked through in the preview.
+5. **Verify.** Never trust an implementer's own summary. Broad jobs: the single `dispatch:deep` pass is the review (see next section). Other diffs: a `dispatch:reviewer` (Sonnet) reads the diff against the piece's goal and returns a short verdict. The orchestrator still runs the build/tests itself and spot-checks the critical hunks directly. UI changes get clicked through in the preview.
 6. **Synthesize.** One coherent report to the user: what was done, what was verified, what's left. Update the ledger to final state.
+
+## Split by difficulty, never by location
+
+The measured failure: told to "fix the bugs" in a 50-file repo, Opus split the work by **folder** ("group A: auth, config, util…"). Every group held at least one hard bug, so every group went to Opus — and Opus also fixed the typos. 22 agents dispatched across the benchmark: 14 Opus, 8 Sonnet, **0 Haiku**. The skill raised the bill 2.4x instead of lowering it.
+
+The fix is a fixed two-stage shape for any broad job (sweep, audit, "fix everything", migrate, review a whole site). Cheap model does the volume, **one** expensive pass does the judgment:
+
+1. **Sweep — cheap, everything.** `haiku` does the whole scope: fixes only what is mechanical or checkable (typos, wrong names vs the README, obvious off-by-ones, failing tests with an obvious cause) and writes a **HARD list** — one line per issue that needs judgment: `file:line — what looks wrong — why it is hard` (security, money, concurrency, caching, crosses modules, unclear cause). It does not attempt HARD items.
+   - Main loop is Haiku → it sweeps itself; that is the cheapest possible stage 1.
+   - Main loop is anything else → dispatch `dispatch:sweeper` (one agent per ~25 files at most; Haiku sweeps cost cents).
+2. **Deep — ONE expensive pass.** Exactly **one** `dispatch:deep` agent (Opus) gets the HARD list **and** the instruction to review the whole `git diff` against the spec and hunt for what the sweep missed. Not one Opus agent per group, not a separate reviewer: every extra Opus agent rebuilds the same context and is paid again. Only if the HARD list is genuinely huge (>~15 unrelated items) split it **by issue type**, never by folder.
+
+The orchestrator itself never does sweep work, and never re-reads the code to "double-check" — it runs the tests and reads the agents' returns. If an Opus or Fable main loop catches itself fixing a typo, that is a routing failure.
+
+Measured on the benchmark (3 runs each), with this skill: **Opus main 16/16 every run, $2.33**; Haiku main (always-on) 15.7/16, $1.55. For comparison: Opus alone 15.3/16, $1.63; v2 with several Opus agents + a reviewer $3.38; a scripted Haiku-then-one-Opus pipeline (no skill) 16/16, $1.49. The Haiku stage cost $0.06-0.16; all the money is in the Opus contexts, so the number of Opus contexts is the lever.
+
+When the job is small (one dependent chain, a handful of files), skip all of this and do it directly — see "When NOT to use this".
 
 ## Routing table
 
 | Tier | `model` | Give it | Examples |
 |------|---------|---------|----------|
-| **Haiku** | `haiku` | Volume work whose result can be **checked** (tests, a spec, a judge, a diff) | Renames, find-replace, boilerplate, format conversions, extraction, sweeps, link/screenshot checks — and first-pass bug sweeps on code with tests or a spec (measured: 15/16 seeded bugs for $0.24, vs 16/16 for $3.96 on Opus+dispatch). Never the only judge on security, money or client code: it missed the same bug in 6/6 runs. Its price jumps 5x above a 100K-token prompt — keep its units small |
+| **Haiku** | `haiku` | Volume work whose result can be **checked** (tests, a spec, a judge, a diff) | Renames, find-replace, boilerplate, format conversions, extraction, sweeps, link/screenshot checks — and first-pass bug sweeps on code with tests or a spec (measured: 15/16 seeded bugs for $0.24, vs 16/16 for $2.33 on Opus+dispatch v2.1). Never the only judge on security, money or client code; as a solo main it missed the README export-name bug (B05) in 6/6 runs. Its price jumps 5x above a 100K-token prompt — keep its units small |
 | **Sonnet** | `sonnet` | Standard engineering with a clear spec and a clear finish line | Well-scoped features, tests for existing behavior, refactors inside one module, CRUD endpoints, styling from a mockup, docs, straightforward bug fixes, diff review |
 | **Opus** | `opus` | Judgment-heavy pieces — and **the default when unsure** (Anthropic's own advice) | Multi-file refactors, debugging with unclear cause, performance work, security-sensitive code, tricky edge cases, anything where a wrong local decision breaks other pieces |
 | **Fable** | `fable` | Only (a) an autonomous unit that runs for hours / deep research, or (b) a piece **Opus already failed** at higher effort | Never a default, never for volume, never the "hard piece" tier by reflex. Measured: as main loop it reached the same 16/16 as Opus at +49% cost, and solo it scored below solo Opus at 2.6x the price; Anthropic's SWE-bench data shows the same score as Opus at ~5x cost per solved task |
@@ -47,7 +64,7 @@ Always pass the **alias** (`haiku` / `sonnet` / `opus` / `fable`), never a dated
 
 **Effort is a routing field too.** Anthropic: "tuning effort is often a better lever than switching models." Where a checker exists (tests, judge, spec), run the unit at low/medium effort first and re-run **only the failures** one effort level or one tier up — Anthropic measured ~97% solved for $0.17 per task this way vs 95.3% for $0.29 with everything at high. Set effort once per agent; changing top-level effort mid-session breaks the cache.
 
-**Cheap pass, strong check.** For a broad sweep (all bugs, all pages, all links): Haiku does the pass, then one Opus agent reviews what Haiku changed and what it may have missed. Cheaper than Opus doing everything; not yet benchmarked here — measure before relying on it for client work.
+**Cheap pass, strong check.** For a broad sweep (all bugs, all pages, all links): Haiku does the pass, then one Opus agent reviews what Haiku changed and what it may have missed. This is the shape the section above uses; as a fixed script it measured 16/16 for $1.49.
 
 **Model resolution order** (Claude Code): the per-call `model` parameter > the agent definition's frontmatter > `CLAUDE_CODE_SUBAGENT_MODEL` > the parent's model. `CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1` silently overrides every per-call choice — check for it if routing seems ignored. `/tasks` shows which model each agent actually ran on.
 
@@ -107,7 +124,7 @@ When the plan contains many pieces of the same shape (~8+ — migrate N files, a
 ## Cost discipline
 
 - Haiku is the default for anything mechanical or checkable. Opus where Sonnet would plausibly get it wrong. Compare **cost per finished task**, not per token — a cheap model that needs three retries is not cheap.
-- **Scale the number of agents to the job** (Anthropic's rule against over-investing): a lookup = 1 agent, a comparison = 2-4, more only for real breadth. In the benchmark, 3 sweep agents + 1 reviewer was enough for a 50-file repo.
+- **Scale the number of agents to the job** (Anthropic's rule against over-investing): a lookup = 1 agent, a comparison = 2-4, more only for real breadth. In the benchmark, 2 Haiku sweepers + 1 deep pass was enough for a 50-file repo.
 - Don't split a task thinner than its pieces are worth — five 30-second Haiku jobs are worse than one 3-minute Sonnet job.
 - **Cap concurrency by the machine, not by ambition.** Every agent is its own process tree (CLI, node, often a browser). Default ~3 at once; go to 4-5 only when there's real free RAM (~5 GB+). Each agent holds **at most one headless browser**, closes it as soon as its step is done, and checks free memory before opening one. Measured: an uncapped parallel fan-out, every agent with its own Chrome, pushed a 54 GB machine to ~47 GB commit — everything paged and the desktop took minutes to recover.
 - **Turn cap — cache reads are the real bill.** Every turn re-reads the agent's whole context, so cost ≈ context size × turns. Measured: three uncapped Opus agents (two reviewers, one fact extraction; ~3,300 / ~2,000 / ~2,150 turns) burned ~2.85B tokens — 73% of everything spent in that window. Rules for every dispatch:
@@ -155,3 +172,4 @@ When routing misses — a tier fails on work the table sent it, or an expensive 
   | Fable | 15.0, $4.28 | 16.0, $5.89 |
 
   Only Opus and Fable mains dispatched (3/3 each: 3 sweep agents + a reviewer). Haiku and Sonnet never did → added the hard trigger, demoted Fable, widened Haiku to checkable work, added "green tests are not done".
+- 2026-10-18 v2/v2.1 (21 more runs): v1's 22 dispatched agents were 14 Opus / 8 Sonnet / 0 Haiku (split by folder) → split by difficulty + pinned agents. v2 (several Opus agents + Sonnet reviewer): Opus main 16/16, $3.38. **v2.1 (one Opus pass): Opus main 16/16 every run, $2.33**; Haiku main always-on 15.7, $1.55, hard trigger 3/3; Haiku as plugin only: skill never auto-loaded (0/3) → Haiku/Sonnet users need the always-on install. Scripted Haiku-then-one-Opus: 16/16, $1.49.

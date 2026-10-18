@@ -1,0 +1,54 @@
+== combo-r1 (claude-haiku-5-5) fixed=16/16 regression=True cost=$1.38 secs=288 main_turns=48 tool_calls=47
+   by grade: mechanical 5/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: 
+   agents (0): 
+== combo-r2 (claude-haiku-5-5) fixed=16/16 regression=True cost=$1.55 secs=333 main_turns=72 tool_calls=71
+   by grade: mechanical 5/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: 
+   agents (0): 
+== combo-r3 (claude-haiku-5-5) fixed=16/16 regression=True cost=$1.53 secs=290 main_turns=44 tool_calls=43
+   by grade: mechanical 5/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: 
+   agents (0): 
+== haiku-always-r1 (claude-haiku-5-5) fixed=15/16 regression=True cost=$0.89 secs=289 main_turns=3 tool_calls=45
+   by grade: mechanical 4/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: B05
+   agents (1): opus/dispatch:reviewer/main:Opus review of bug-fix diff
+== haiku-always-r2 (claude-haiku-5-5) fixed=15/16 regression=True cost=$0.25 secs=196 main_turns=51 tool_calls=50
+   by grade: mechanical 5/5, standard 5/5, hard/security 4/4, design 1/2
+   missed: B16
+   agents (0): 
+== haiku-always-r3 (claude-haiku-5-5) fixed=16/16 regression=True cost=$3.83 secs=690 main_turns=1 tool_calls=129
+   by grade: mechanical 5/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: 
+   agents (6): haiku/dispatch:sweeper/main:Sweep shop repo for mechanical bugs; opus/dispatch:deep/main:Fix security and auth HARD items; opus/dispatch:deep/main:Fix money, inventory, cache, order HARD items; opus/dispatch:reviewer/main:Review full diff against README spec; opus/dispatch:deep/main:Fix commit, pay concurrency and sold findings; opus/dispatch:reviewer/main:Re-review inventory and payment changes
+== opus-always-r1 (claude-opus-5-5) fixed=16/16 regression=True cost=$4.13 secs=576 main_turns=8 tool_calls=119
+   by grade: mechanical 5/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: 
+   agents (7): haiku/dispatch:sweeper/main:Sweep auth/config/db/util/i18n/mail; haiku/dispatch:sweeper/main:Sweep cart/catalog/orders/pricing; haiku/dispatch:sweeper/main:Sweep ratelimit/reports/search/uploads; opus/dispatch:deep/main:Deep: security HARD items; opus/dispatch:deep/main:Deep: money rounding HARD items; opus/dispatch:deep/main:Deep: caching+concurrency HARD items; sonnet/dispatch:reviewer/main:Review full diff vs README
+== opus-always-r2 (claude-opus-5-5) fixed=16/16 regression=True cost=$2.75 secs=461 main_turns=3 tool_calls=80
+   by grade: mechanical 5/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: 
+   agents (5): haiku/dispatch:sweeper/main:Sweep A: auth/uploads/util; haiku/dispatch:sweeper/main:Sweep B: cart/pricing/orders; haiku/dispatch:sweeper/main:Sweep C: db/search/reports; opus/dispatch:deep/main:Deep: fix HARD list; sonnet/dispatch:reviewer/main:Review full diff vs README
+== opus-always-r3 (claude-opus-5-5) fixed=16/16 regression=True cost=$3.25 secs=417 main_turns=7 tool_calls=84
+   by grade: mechanical 5/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: 
+   agents (6): haiku/dispatch:sweeper/main:Sweep A: auth/config/db/util/ratelimit; haiku/dispatch:sweeper/main:Sweep B: cart/catalog/pricing/orders; haiku/dispatch:sweeper/main:Sweep C: i18n/mail/reports/search/uploads; opus/dispatch:deep/main:Deep 1: money + order concurrency; opus/dispatch:deep/main:Deep 2: caches, security, timing; sonnet/dispatch:reviewer/main:Review full diff vs README
+== opus-plugin-r1 (claude-opus-5-5) fixed=16/16 regression=True cost=$2.71 secs=533 main_turns=4 tool_calls=95
+   by grade: mechanical 5/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: 
+   agents (5): haiku/dispatch:sweeper/main:Sweep A auth/config/util; haiku/dispatch:sweeper/main:Sweep B cart/pricing/orders; haiku/dispatch:sweeper/main:Sweep C db/mail/reports; opus/dispatch:deep/main:Deep fix HARD list; sonnet/dispatch:reviewer/main:Review full diff
+== opus-plugin-r2 (claude-opus-5-5) fixed=16/16 regression=True cost=$4.18 secs=716 main_turns=8 tool_calls=125
+   by grade: mechanical 5/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: 
+   agents (6): haiku/dispatch:sweeper/main:Sweep S1 auth/config/util; haiku/dispatch:sweeper/main:Sweep S2 db/cart/orders; haiku/dispatch:sweeper/main:Sweep S3 search/uploads/reports; opus/dispatch:deep/main:Deep fix HARD list; sonnet/dispatch:reviewer/main:Review full diff vs README; opus/dispatch:deep/main:Deep fix cancel races + LIKE
+== opus-plugin-r3 (claude-opus-5-5) fixed=16/16 regression=True cost=$3.15 secs=541 main_turns=7 tool_calls=94
+   by grade: mechanical 5/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: 
+   agents (5): haiku/dispatch:sweeper/main:Sweep A: auth/cart/catalog/config/db; haiku/dispatch:sweeper/main:Sweep B: i18n/inventory/mail/orders/payments/prici; haiku/dispatch:sweeper/main:Sweep C: ratelimit/reports/search/uploads/util; opus/dispatch:deep/main:Deep: fix HARD list (security/money/cache); sonnet/dispatch:reviewer/main:Review full bugfix diff vs README
+
+ARM | runs | fixed each | mean fixed | mean $ | mean secs | runs that dispatched
+combo | 3 | [16, 16, 16] | 16.0 | 1.49 | 304 | 0
+haiku-always | 3 | [15, 15, 16] | 15.3 | 1.65 | 392 | 2
+opus-always | 3 | [16, 16, 16] | 16.0 | 3.38 | 485 | 3
+opus-plugin | 3 | [16, 16, 16] | 16.0 | 3.35 | 597 | 3

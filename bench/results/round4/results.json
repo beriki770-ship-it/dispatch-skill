@@ -1,0 +1,39 @@
+[
+ {
+  "name": "haiku-always-r1",
+  "fixed": 16,
+  "cost": 1.2973349099999998,
+  "secs": "336",
+  "agents": 1,
+  "agent_models": [
+   "inherit"
+  ],
+  "missed": []
+ },
+ {
+  "name": "haiku-always-r2",
+  "fixed": 16,
+  "cost": 1.6189351100000002,
+  "secs": "436",
+  "agents": 3,
+  "agent_models": [
+   "inherit",
+   "inherit",
+   "inherit"
+  ],
+  "missed": []
+ },
+ {
+  "name": "haiku-always-r3",
+  "fixed": 15,
+  "cost": 1.7283619299999997,
+  "secs": "1486",
+  "agents": 1,
+  "agent_models": [
+   "inherit"
+  ],
+  "missed": [
+   "B05"
+  ]
+ }
+]

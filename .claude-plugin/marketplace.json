@@ -1,0 +1,12 @@
+{
+  "name": "dispatch-skill",
+  "description": "Model routing for Claude Code subagents, measured on a real benchmark.",
+  "owner": { "name": "Shalom Dov Ber Kirsh" },
+  "plugins": [
+    {
+      "name": "dispatch",
+      "source": ".",
+      "description": "Your main model plans; cheap agents do the simple work and Opus only gets the hard part."
+    }
+  ]
+}

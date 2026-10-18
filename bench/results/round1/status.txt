@@ -1,0 +1,26 @@
+sonnet-skill exit=0 secs=160
+haiku-skill exit=0 secs=179
+opus-skill exit=0 secs=323
+haiku-noskill exit=0 secs=161
+sonnet-noskill exit=0 secs=66
+opus-noskill exit=0 secs=162
+fable-skill exit=0 secs=351
+fable-noskill exit=0 secs=287
+ALLDONE
+sonnet-skill-r2 exit=0 secs=261
+haiku-skill-r2 exit=0 secs=511
+haiku-noskill-r2 exit=0 secs=888
+opus-skill-r2 exit=0 secs=1464
+sonnet-noskill-r2 exit=0 secs=86
+fable-skill-r2 exit=0 secs=1536
+opus-noskill-r2 exit=0 secs=591
+haiku-skill-r3 exit=0 secs=226
+fable-noskill-r2 exit=0 secs=708
+sonnet-skill-r3 exit=0 secs=149
+haiku-noskill-r3 exit=0 secs=250
+opus-skill-r3 exit=0 secs=550
+sonnet-noskill-r3 exit=0 secs=174
+fable-skill-r3 exit=0 secs=515
+opus-noskill-r3 exit=0 secs=221
+fable-noskill-r3 exit=0 secs=312
+REPSDONE

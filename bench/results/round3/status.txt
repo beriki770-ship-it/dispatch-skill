@@ -1,0 +1,7 @@
+haiku-plugin-r1 exit=0 secs=208
+haiku-plugin-r2 exit=0 secs=236
+opus-plugin-r2 exit=0 secs=465
+opus-plugin-r1 exit=0 secs=531
+haiku-plugin-r3 exit=0 secs=142
+opus-plugin-r3 exit=0 secs=378
+DONE

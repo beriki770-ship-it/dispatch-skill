@@ -1,0 +1,28 @@
+== haiku-plugin-r1 (claude-haiku-5-5) fixed=15/16 regression=True cost=$0.23 secs=208 main_turns=49 tool_calls=48
+   by grade: mechanical 4/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: B05
+   agents (0): 
+== haiku-plugin-r2 (claude-haiku-5-5) fixed=15/16 regression=True cost=$0.23 secs=236 main_turns=60 tool_calls=59
+   by grade: mechanical 4/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: B05
+   agents (0): 
+== haiku-plugin-r3 (claude-haiku-5-5) fixed=14/16 regression=True cost=$0.19 secs=142 main_turns=43 tool_calls=42
+   by grade: mechanical 4/5, standard 5/5, hard/security 4/4, design 1/2
+   missed: B05,B16
+   agents (0): 
+== opus-plugin-r1 (claude-opus-5-5) fixed=16/16 regression=True cost=$2.45 secs=531 main_turns=4 tool_calls=69
+   by grade: mechanical 5/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: 
+   agents (3): haiku/dispatch:sweeper/main:Sweep A: auth..mail; haiku/dispatch:sweeper/main:Sweep B: orders..util; opus/dispatch:deep/main:Deep pass: HARD list + diff review
+== opus-plugin-r2 (claude-opus-5-5) fixed=16/16 regression=True cost=$2.40 secs=465 main_turns=3 tool_calls=90
+   by grade: mechanical 5/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: 
+   agents (3): haiku/dispatch:sweeper/main:Sweep A bug pass; haiku/dispatch:sweeper/main:Sweep B bug pass; opus/dispatch:deep/main:Deep pass: HARD bugs + review
+== opus-plugin-r3 (claude-opus-5-5) fixed=16/16 regression=True cost=$2.14 secs=378 main_turns=2 tool_calls=69
+   by grade: mechanical 5/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: 
+   agents (3): haiku/dispatch:sweeper/main:Sweep group A; haiku/dispatch:sweeper/main:Sweep group B; opus/dispatch:deep/main:Deep pass on HARD list
+
+ARM | runs | fixed each | mean fixed | mean $ | mean secs | runs that dispatched
+haiku-plugin | 3 | [15, 15, 14] | 14.7 | 0.22 | 195 | 0
+opus-plugin | 3 | [16, 16, 16] | 16.0 | 2.33 | 458 | 3

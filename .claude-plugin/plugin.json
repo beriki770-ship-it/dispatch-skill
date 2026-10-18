@@ -1,0 +1,21 @@
+{
+  "name": "dispatch",
+  "displayName": "Dispatch",
+  "description": "Your main model plans; cheap agents do the simple work and Opus only gets the hard part. Benchmarked: 45 runs on a 50-file repo with 16 hidden bugs.",
+  "version": "2.1.0",
+  "author": {
+    "name": "Shalom Dov Ber Kirsh",
+    "url": "https://digital.wildmoments.at/"
+  },
+  "homepage": "https://github.com/beriki770-ship-it/dispatch-skill",
+  "repository": "https://github.com/beriki770-ship-it/dispatch-skill",
+  "license": "MIT",
+  "keywords": [
+    "subagents",
+    "orchestration",
+    "model-routing",
+    "cost",
+    "haiku",
+    "opus"
+  ]
+}

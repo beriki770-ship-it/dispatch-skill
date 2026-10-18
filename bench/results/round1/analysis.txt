@@ -1,0 +1,106 @@
+== fable-noskill (claude-fable-5-1) fixed=15/16 regression=True cost=$4.06 secs=287 main_turns=46 tool_calls=45
+   by grade: mechanical 4/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: B05
+   agents (0): 
+== fable-noskill-r2 (claude-fable-5-1) fixed=15/16 regression=True cost=$4.69 secs=708 main_turns=22 tool_calls=21
+   by grade: mechanical 4/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: B05
+   agents (0): 
+== fable-noskill-r3 (claude-fable-5-1) fixed=15/16 regression=True cost=$4.08 secs=312 main_turns=55 tool_calls=54
+   by grade: mechanical 4/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: B05
+   agents (0): 
+== fable-skill (claude-fable-5-1) fixed=16/16 regression=True cost=$5.40 secs=351 main_turns=7 tool_calls=71
+   by grade: mechanical 5/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: 
+   agents (3): opus//main:Bug hunt: auth/db/config/i18n/mail; opus//main:Bug hunt: cart/orders/inventory/payments; opus//main:Bug hunt: search/uploads/reports/ratelimit
+== fable-skill-r2 (claude-fable-5-1) fixed=16/16 regression=True cost=$6.18 secs=1536 main_turns=15 tool_calls=76
+   by grade: mechanical 5/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: 
+   agents (4): sonnet//main:Fix auth/ratelimit/i18n/mail bugs; sonnet//main:Fix db/search/uploads/csv bugs; opus//main:Fix money/stock/orders bugs; sonnet//main:Review full bug-fix diff
+== fable-skill-r3 (claude-fable-5-1) fixed=16/16 regression=True cost=$6.11 secs=515 main_turns=14 tool_calls=79
+   by grade: mechanical 5/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: 
+   agents (3): opus//main:Audit+fix group A modules; opus//main:Audit+fix group B modules; opus//main:Audit+fix group C modules
+== haiku-noskill (claude-haiku-5-5) fixed=14/16 regression=True cost=$0.17 secs=161 main_turns=42 tool_calls=41
+   by grade: mechanical 4/5, standard 5/5, hard/security 4/4, design 1/2
+   missed: B05,B15
+   agents (0): 
+== haiku-noskill-r2 (claude-haiku-5-5) fixed=15/16 regression=True cost=$0.26 secs=888 main_turns=29 tool_calls=28
+   by grade: mechanical 4/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: B05
+   agents (0): 
+== haiku-noskill-r3 (claude-haiku-5-5) fixed=15/16 regression=True cost=$0.26 secs=250 main_turns=52 tool_calls=51
+   by grade: mechanical 4/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: B05
+   agents (0): 
+== haiku-skill (claude-haiku-5-5) fixed=15/16 regression=True cost=$0.20 secs=179 main_turns=47 tool_calls=46
+   by grade: mechanical 4/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: B05
+   agents (0): 
+== haiku-skill-r2 (claude-haiku-5-5) fixed=15/16 regression=True cost=$0.28 secs=511 main_turns=60 tool_calls=58
+   by grade: mechanical 4/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: B05
+   agents (0): 
+== haiku-skill-r3 (claude-haiku-5-5) fixed=15/16 regression=True cost=$0.25 secs=226 main_turns=68 tool_calls=67
+   by grade: mechanical 4/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: B05
+   agents (0): 
+== opus-noskill (claude-opus-5-5) fixed=15/16 regression=True cost=$1.45 secs=162 main_turns=39 tool_calls=38
+   by grade: mechanical 4/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: B05
+   agents (0): 
+== opus-noskill-r2 (claude-opus-5-5) fixed=15/16 regression=True cost=$1.92 secs=591 main_turns=29 tool_calls=28
+   by grade: mechanical 4/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: B05
+   agents (0): 
+== opus-noskill-r3 (claude-opus-5-5) fixed=16/16 regression=True cost=$1.51 secs=221 main_turns=15 tool_calls=14
+   by grade: mechanical 5/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: 
+   agents (0): 
+== opus-skill (claude-opus-5-5) fixed=16/16 regression=True cost=$2.78 secs=323 main_turns=9 tool_calls=61
+   by grade: mechanical 5/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: 
+   agents (4): opus/general-purpose/main:Bug sweep: security modules; sonnet/general-purpose/main:Bug sweep: commerce modules; sonnet/general-purpose/main:Bug sweep: infra modules; sonnet/general-purpose/main:Review bug-fix diff
+== opus-skill-r2 (claude-opus-5-5) fixed=16/16 regression=True cost=$4.89 secs=1464 main_turns=19 tool_calls=93
+   by grade: mechanical 5/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: 
+   agents (4): opus/general-purpose/main:Bug sweep A: auth/config/util/etc; opus/general-purpose/main:Bug sweep B: db/search/catalog/cart/reports; opus/general-purpose/main:Bug sweep C: pricing/inventory/orders/mail; sonnet/general-purpose/main:Review bug-fix diff vs README
+== opus-skill-r3 (claude-opus-5-5) fixed=16/16 regression=True cost=$4.22 secs=550 main_turns=12 tool_calls=83
+   by grade: mechanical 5/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: 
+   agents (4): opus//main:Bug sweep group A; opus//main:Bug sweep group B; opus//main:Bug sweep group C; sonnet//main:Review full bugfix diff
+== sonnet-noskill (claude-sonnet-5-5) fixed=8/16 regression=True cost=$0.36 secs=66 main_turns=15 tool_calls=14
+   by grade: mechanical 2/5, standard 4/5, hard/security 2/4, design 0/2
+   missed: B02,B04,B05,B08,B13,B14,B15,B16
+   agents (0): 
+== sonnet-noskill-r2 (claude-sonnet-5-5) fixed=8/16 regression=True cost=$0.38 secs=86 main_turns=15 tool_calls=14
+   by grade: mechanical 2/5, standard 4/5, hard/security 2/4, design 0/2
+   missed: B02,B04,B05,B08,B13,B14,B15,B16
+   agents (0): 
+== sonnet-noskill-r3 (claude-sonnet-5-5) fixed=15/16 regression=True cost=$0.68 secs=174 main_turns=22 tool_calls=21
+   by grade: mechanical 4/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: B05
+   agents (0): 
+== sonnet-skill (claude-sonnet-5-5) fixed=15/16 regression=True cost=$0.72 secs=160 main_turns=23 tool_calls=22
+   by grade: mechanical 4/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: B05
+   agents (0): 
+== sonnet-skill-r2 (claude-sonnet-5-5) fixed=16/16 regression=True cost=$0.69 secs=261 main_turns=19 tool_calls=18
+   by grade: mechanical 5/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: 
+   agents (0): 
+== sonnet-skill-r3 (claude-sonnet-5-5) fixed=8/16 regression=True cost=$0.41 secs=149 main_turns=16 tool_calls=15
+   by grade: mechanical 2/5, standard 4/5, hard/security 2/4, design 0/2
+   missed: B02,B04,B05,B08,B13,B14,B15,B16
+   agents (0): 
+
+ARM | runs | fixed each | mean fixed | mean $ | mean secs | runs that dispatched
+fable-noskill | 3 | [15, 15, 15] | 15.0 | 4.28 | 436 | 0
+fable-skill | 3 | [16, 16, 16] | 16.0 | 5.89 | 801 | 3
+haiku-noskill | 3 | [14, 15, 15] | 14.7 | 0.23 | 433 | 0
+haiku-skill | 3 | [15, 15, 15] | 15.0 | 0.24 | 305 | 0
+opus-noskill | 3 | [15, 15, 16] | 15.3 | 1.63 | 325 | 0
+opus-skill | 3 | [16, 16, 16] | 16.0 | 3.96 | 779 | 3
+sonnet-noskill | 3 | [8, 8, 15] | 10.3 | 0.47 | 109 | 0
+sonnet-skill | 3 | [15, 16, 8] | 13.0 | 0.61 | 190 | 0

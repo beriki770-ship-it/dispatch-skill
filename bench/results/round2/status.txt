@@ -1,0 +1,13 @@
+haiku-always-r1 exit=0 secs=289
+opus-plugin-r1 exit=0 secs=533
+opus-always-r1 exit=0 secs=576
+combo-r1 exit=0 secs=288
+haiku-always-r2 exit=0 secs=196
+opus-always-r2 exit=0 secs=461
+combo-r2 exit=0 secs=333
+opus-plugin-r2 exit=0 secs=716
+opus-always-r3 exit=0 secs=417
+opus-plugin-r3 exit=0 secs=541
+combo-r3 exit=0 secs=290
+haiku-always-r3 exit=0 secs=690
+DONE

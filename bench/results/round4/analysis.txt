@@ -1,0 +1,15 @@
+== haiku-always-r1 (claude-haiku-5-5) fixed=16/16 regression=True cost=$1.30 secs=336 main_turns=2 tool_calls=42
+   by grade: mechanical 5/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: 
+   agents (1): inherit/dispatch:deep/main:Fix HARD bugs in shop repo
+== haiku-always-r2 (claude-haiku-5-5) fixed=16/16 regression=True cost=$1.62 secs=436 main_turns=9 tool_calls=57
+   by grade: mechanical 5/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: 
+   agents (3): inherit/dispatch:sweeper/main:Sweep src part A for bugs; inherit/dispatch:sweeper/main:Sweep src part B for bugs; inherit/dispatch:deep/main:Deep pass: HARD list and whole-diff review
+== haiku-always-r3 (claude-haiku-5-5) fixed=15/16 regression=True cost=$1.73 secs=1486 main_turns=3 tool_calls=71
+   by grade: mechanical 4/5, standard 5/5, hard/security 4/4, design 2/2
+   missed: B05
+   agents (1): inherit/dispatch:deep/main:Deep review of shop repo bugs
+
+ARM | runs | fixed each | mean fixed | mean $ | mean secs | runs that dispatched
+haiku-always | 3 | [16, 16, 15] | 15.7 | 1.55 | 753 | 3

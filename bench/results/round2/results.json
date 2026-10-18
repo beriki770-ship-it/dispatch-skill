@@ -1,0 +1,163 @@
+[
+ {
+  "name": "combo-r1",
+  "fixed": 16,
+  "cost": 1.3821115499999999,
+  "secs": "288",
+  "agents": 0,
+  "agent_models": [],
+  "missed": []
+ },
+ {
+  "name": "combo-r2",
+  "fixed": 16,
+  "cost": 1.54629141,
+  "secs": "333",
+  "agents": 0,
+  "agent_models": [],
+  "missed": []
+ },
+ {
+  "name": "combo-r3",
+  "fixed": 16,
+  "cost": 1.52776822,
+  "secs": "290",
+  "agents": 0,
+  "agent_models": [],
+  "missed": []
+ },
+ {
+  "name": "haiku-always-r1",
+  "fixed": 15,
+  "cost": 0.88827065,
+  "secs": "289",
+  "agents": 1,
+  "agent_models": [
+   "opus"
+  ],
+  "missed": [
+   "B05"
+  ]
+ },
+ {
+  "name": "haiku-always-r2",
+  "fixed": 15,
+  "cost": 0.24636342,
+  "secs": "196",
+  "agents": 0,
+  "agent_models": [],
+  "missed": [
+   "B16"
+  ]
+ },
+ {
+  "name": "haiku-always-r3",
+  "fixed": 16,
+  "cost": 3.8290020000000013,
+  "secs": "690",
+  "agents": 6,
+  "agent_models": [
+   "haiku",
+   "opus",
+   "opus",
+   "opus",
+   "opus",
+   "opus"
+  ],
+  "missed": []
+ },
+ {
+  "name": "opus-always-r1",
+  "fixed": 16,
+  "cost": 4.133059224999999,
+  "secs": "576",
+  "agents": 7,
+  "agent_models": [
+   "haiku",
+   "haiku",
+   "haiku",
+   "opus",
+   "opus",
+   "opus",
+   "sonnet"
+  ],
+  "missed": []
+ },
+ {
+  "name": "opus-always-r2",
+  "fixed": 16,
+  "cost": 2.7540327749999993,
+  "secs": "461",
+  "agents": 5,
+  "agent_models": [
+   "haiku",
+   "haiku",
+   "haiku",
+   "opus",
+   "sonnet"
+  ],
+  "missed": []
+ },
+ {
+  "name": "opus-always-r3",
+  "fixed": 16,
+  "cost": 3.251777765,
+  "secs": "417",
+  "agents": 6,
+  "agent_models": [
+   "haiku",
+   "haiku",
+   "haiku",
+   "opus",
+   "opus",
+   "sonnet"
+  ],
+  "missed": []
+ },
+ {
+  "name": "opus-plugin-r1",
+  "fixed": 16,
+  "cost": 2.7100821799999992,
+  "secs": "533",
+  "agents": 5,
+  "agent_models": [
+   "haiku",
+   "haiku",
+   "haiku",
+   "opus",
+   "sonnet"
+  ],
+  "missed": []
+ },
+ {
+  "name": "opus-plugin-r2",
+  "fixed": 16,
+  "cost": 4.181493340000001,
+  "secs": "716",
+  "agents": 6,
+  "agent_models": [
+   "haiku",
+   "haiku",
+   "haiku",
+   "opus",
+   "sonnet",
+   "opus"
+  ],
+  "missed": []
+ },
+ {
+  "name": "opus-plugin-r3",
+  "fixed": 16,
+  "cost": 3.1531925000000007,
+  "secs": "541",
+  "agents": 5,
+  "agent_models": [
+   "haiku",
+   "haiku",
+   "haiku",
+   "opus",
+   "sonnet"
+  ],
+  "missed": []
+ }
+]
