@@ -55,10 +55,14 @@ skill file supplies the full detail when it loads.
 
 ## Which model is "the orchestrator"?
 
-Whatever runs your main conversation. On Fable, Fable orchestrates. On Opus,
-Opus takes the orchestrator role and does the full planning and verification
-work itself — the rule degrades by tier, it never stops working. Subagent tiers
-(Opus/Sonnet/Haiku) stay the same either way.
+Whatever runs your main conversation — Fable, Opus, Sonnet or Haiku. The tier
+of each subagent is picked from its piece of work, never from the orchestrator,
+so any main model can dispatch any tier, including ones above itself: Opus
+sends Fable for the hardest call, Haiku sends Opus. If the main model is weaker
+than the job (running Haiku as the main loop on a real refactor, say), it hands
+the plan and the final review up to a stronger agent and keeps only the
+bookkeeping. If a tier isn't available on your account, it uses the next one
+down and says so.
 
 ## Pairs well with
 
