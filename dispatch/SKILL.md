@@ -1,20 +1,13 @@
 ---
 name: dispatch
-description: The orchestrator plans, cheaper agents execute. For any multi-part task, whatever model runs the main loop (Fable, Opus, Sonnet or even Haiku) stays the planner/orchestrator and dispatches subagents, each on the model tier that fits its piece — Fable for orchestrator-grade judgment, Opus for judgment-heavy work, Sonnet for standard engineering, Haiku for mechanical work. The tier follows the task, never the orchestrator: any main model can send any tier, including tiers above itself. Independent pieces run in parallel; the orchestrator verifies everything before reporting done. Also keeps the main conversation's context lean, and checkpoints all dispatch state to a file so a compacted or interrupted session loses no work.
+description: The orchestrator plans, cheaper agents execute. For any multi-part task, the main-loop model (Fable when available, otherwise Opus) stays the planner/orchestrator and dispatches subagents, each on the cheapest model tier that can do its piece well — Opus for judgment-heavy work, Sonnet for standard engineering, Haiku for mechanical work. Independent pieces run in parallel; the orchestrator verifies everything before reporting done. Also keeps the main conversation's context lean, and checkpoints all dispatch state to a file so a compacted or interrupted session loses no work.
 ---
 
 # dispatch — the orchestrator plans, agents execute
 
 The orchestrator's job in this mode is thinking, not typing: decompose, route, dispatch, verify, synthesize. The implementation happens in subagents running on cheaper models, each matched to its task.
 
-**Who the orchestrator is:** whatever model runs the main loop — Fable, Opus, Sonnet or Haiku. The skill works the same from every seat.
-
-**The task picks the agent, never the orchestrator.** Each piece gets the tier that fits it exactly, judged from the piece alone:
-
-- **Dispatch upward freely.** Opus sends a Fable agent when a piece needs it; a Haiku or Sonnet main loop sends Opus or Fable. The orchestrator's own tier is never a ceiling.
-- **No inflation, no deflation.** An expensive orchestrator still sends renames to Haiku; a cheap one never sends a security fix to Haiku because that's "its level".
-- **Orchestrator weaker than the task?** If the main loop sits below the hardest judgment in the job (e.g. Haiku or Sonnet running a multi-part refactor), it delegates the thinking upward too: the **plan** comes from an Opus/Fable planner agent, and the **final review** from an agent at least as strong as the hardest piece. The main loop then runs the ledger, dispatches and checks evidence mechanically. Running a weak main loop this way costs one extra planner call, which is still cheaper than a wrong plan.
-- **Tier unavailable** (the alias is rejected, the account doesn't have it) → use the next tier down that exists and note the substitution in the ledger. Never silently drop to the bottom.
+**Who the orchestrator is:** whatever model runs the main loop. Fable when available; when it isn't, **Opus IS the orchestrator** and does all of this itself — plan, route, dispatch, verify, synthesize. The skill degrades by tier, never by disappearing.
 
 ## When NOT to use this
 
@@ -39,7 +32,7 @@ The orchestrator's job in this mode is thinking, not typing: decompose, route, d
 | **Sonnet** | `sonnet` | Standard engineering with a clear spec | Well-scoped features, tests for existing behavior, refactors inside one module, CRUD endpoints, styling from a mockup, docs, straightforward bug fixes, diff review |
 | **Opus** | `opus` | Judgment-heavy pieces | Multi-file refactors, debugging with unclear cause, performance work, security-sensitive code, tricky edge cases, anything where a wrong local decision breaks other pieces |
 | **Fable** | `fable` | Top tier — only when a piece needs orchestrator-grade judgment and Opus would plausibly miss it | A self-contained architectural decision, an adversarial review of the whole plan, a piece whose wrong call invalidates every other agent's work. Most expensive — never a default, never for volume |
-| **Orchestrator** | (main loop — any model) | Routing, the ledger and synthesis stay here; the plan and final review go UP to a stronger agent when the main loop is below the hardest piece | The plan itself, decomposition, routing, resolving conflicts between agents' outputs, final verification, synthesis. Implements directly only when dispatch overhead exceeds the task, or after the escalation ladder is exhausted |
+| **Orchestrator** | (main loop — Fable, or Opus when Fable is unavailable) | Never delegated | The plan itself, decomposition, routing, resolving conflicts between agents' outputs, final verification, synthesis. Implements directly only when dispatch overhead exceeds the task, or after the escalation ladder is exhausted |
 
 Always pass the **alias** (`haiku` / `sonnet` / `opus` / `fable`), never a dated model id — the alias follows each new generation, a pinned id goes stale.
 

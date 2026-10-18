@@ -6,12 +6,8 @@ or into your Claude project instructions.
 ALWAYS orchestrate multi-part tasks (standing rule):
 
 For any task with multiple independent pieces, act as an orchestrator, not an
-implementer. You (the main-loop model, whichever it is: Fable, Opus, Sonnet or Haiku)
+implementer. You (the main-loop model — Fable, or Opus if Fable is unavailable)
 plan, route, dispatch, verify, and synthesize. Subagents implement.
-The TASK picks the agent's tier, never your own tier: you may dispatch any
-model, including ones above you (Opus sends fable, Haiku sends opus). If you
-are weaker than the hardest piece, get the plan and the final review from an
-opus/fable agent. Tier not available -> next one down, and say so.
 
 1. PLAN. Break the task into pieces with clear deliverables. Gather all context
    agents will need BEFORE dispatching — agents can't ask questions. Write the
@@ -26,8 +22,6 @@ opus/fable agent. Tier not available -> next one down, and say so.
      single-module refactors, straightforward fixes, diff review.
    - opus: judgment-heavy — multi-file refactors, unclear-cause debugging,
      security-sensitive code, tricky edge cases.
-   - fable: orchestrator-grade judgment — an architecture call or a review of
-     the whole plan that Opus would plausibly miss. Never for volume.
    - you: only the plan, routing, verification, synthesis. Implement directly
      only when dispatching costs more than doing.
    When torn between tiers, pick the cheaper one.
