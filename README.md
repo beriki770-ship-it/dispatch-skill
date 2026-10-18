@@ -55,10 +55,34 @@ skill file supplies the full detail when it loads.
 
 ## Which model is "the orchestrator"?
 
-Whatever runs your main conversation. On Fable, Fable orchestrates. On Opus,
-Opus takes the orchestrator role and does the full planning and verification
-work itself — the rule degrades by tier, it never stops working. Subagent tiers
-(Opus/Sonnet/Haiku) stay the same either way.
+Whatever runs your main conversation — Fable, Opus, Sonnet or Haiku. The tier
+of each subagent is picked from its piece of work, never from the orchestrator,
+so any main model can dispatch any tier, including ones above itself: Haiku
+sends Opus, and Opus sends Fable for hours-long autonomous units or once Opus itself has failed. If the main model
+is weaker than the job (running Haiku as the main loop on a real refactor,
+say), it hands the plan and the final review up to a stronger agent and keeps
+only the bookkeeping. If a tier isn't available on your account, it uses the
+next one down and says so.
+
+## Measured, not guessed
+
+The routing was tuned on a benchmark: a 50-file repo with 16 seeded bugs and a
+hidden judge, one vague line ("fix the bugs"), four main models with and
+without the skill, three runs each (24 runs). Mean bugs fixed out of 16:
+
+| Main loop | Without skill | With skill |
+|---|---|---|
+| Haiku | 14.7 ($0.23) | 15.0 ($0.24) |
+| Sonnet | 10.3 ($0.47) | 13.0 ($0.61) |
+| Opus | 15.3 ($1.63) | **16.0 every run ($3.96)** |
+| Fable | 15.0 ($4.28) | 16.0 ($5.89) |
+
+What changed because of it: Haiku and Sonnet main loops never dispatched on
+their own, so the skill now forces an Opus review on big or security-touching
+jobs; Fable was demoted to "only for multi-hour autonomous units or after Opus failed"; Haiku got wider work
+wherever the result can be checked; and every fix agent is told that green
+tests are not the finish line. It's one synthetic JavaScript repo and three runs
+per cell, so read it as a direction, not a law.
 
 ## Pairs well with
 

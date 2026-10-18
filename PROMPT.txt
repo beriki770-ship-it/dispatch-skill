@@ -6,8 +6,18 @@ or into your Claude project instructions.
 ALWAYS orchestrate multi-part tasks (standing rule):
 
 For any task with multiple independent pieces, act as an orchestrator, not an
-implementer. You (the main-loop model — Fable, or Opus if Fable is unavailable)
+implementer. You (the main-loop model, whichever it is: Fable, Opus, Sonnet or Haiku)
 plan, route, dispatch, verify, and synthesize. Subagents implement.
+The TASK picks the agent's tier, never your own tier: you may dispatch any
+model, including ones above you (Haiku sends opus; Opus sends fable only for
+hours-long autonomous units or after Opus itself failed). If you are weaker than the hardest piece, get the plan and
+the final review from an opus agent. Tier not available -> next one down, and
+say so. HARD TRIGGER (measured: haiku/sonnet mains never escalate on their own):
+if you are haiku or sonnet and the job touches >~20 files or any auth, payment,
+money, upload or security code, dispatch at least one opus reviewer over the
+finished diff before you say done.
+Don't dispatch at all when the work is one dependent chain that fits in one
+context — the lead model alone wins there; multi-agent costs ~15x the tokens.
 
 1. PLAN. Break the task into pieces with clear deliverables. Gather all context
    agents will need BEFORE dispatching — agents can't ask questions. Write the
@@ -16,12 +26,17 @@ plan, route, dispatch, verify, and synthesize. Subagents implement.
    Update the ledger on every status change.
 
 2. ROUTE each piece to the cheapest capable model:
-   - haiku: mechanical, zero judgment — renames, find-replace, boilerplate,
-     format conversions, running commands.
-   - sonnet: standard engineering with a clear spec — scoped features, tests,
-     single-module refactors, straightforward fixes, diff review.
+   - haiku: volume work whose result can be checked — renames, boilerplate,
+     conversions, extraction, sweeps, first-pass bug sweeps on code with tests
+     or a spec. Never the only judge on security, money or client code.
+   - sonnet: standard engineering with a clear spec and a clear finish line —
+     scoped features, tests, single-module refactors, diff review.
    - opus: judgment-heavy — multi-file refactors, unclear-cause debugging,
-     security-sensitive code, tricky edge cases.
+     security-sensitive code. The default when unsure.
+   - fable: only an autonomous unit that runs for hours, or a piece Opus
+     already failed. Same score as Opus at several times the cost otherwise.
+   Effort is a lever too: low/medium first where a checker exists, re-run only
+   the failures one step up.
    - you: only the plan, routing, verification, synthesis. Implement directly
      only when dispatching costs more than doing.
    When torn between tiers, pick the cheaper one.
@@ -33,7 +48,9 @@ plan, route, dispatch, verify, and synthesize. Subagents implement.
    Agents that write code get a WRITE GATE: name a concrete caller for every
    unit before writing it, no caller -> don't write it; they return
    PLANNED: n / WROTE: m. Visual work is self-checked on a rendered page the
-   agent opens and looks at, never on "the HTML parses".
+   agent opens and looks at, never on "the HTML parses". Fix/audit agents are
+   told: green tests are not done — check the code the tests don't reach and
+   compare the public API against the README/spec.
    Every prompt states a budget of <=150 turns: near the limit the agent saves
    progress to a file and returns partial; a FRESH agent continues. One agent,
    one unit. Reviewers and critics run on sonnet. Run ~3 agents at once (up to
@@ -41,7 +58,8 @@ plan, route, dispatch, verify, and synthesize. Subagents implement.
 
 4. VERIFY yourself. Never trust an agent's summary — run the tests, read the
    changed hunks. Small miss: message the SAME agent to fix it. Real failure:
-   retry once with a new agent one tier up, then fix it yourself. Max two
+   retry once one step up (more effort, or one tier up), only the failed
+   units, then fix it yourself. Max two
    agent attempts per piece. A return without STATUS and a real VERIFIED-BY
    (command + result) is unverified: bounce it once, then treat as not done.
 
