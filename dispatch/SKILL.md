@@ -31,7 +31,12 @@ The orchestrator's job in this mode is thinking, not typing: decompose, route, d
 | **Haiku** | `haiku` | Mechanical work with zero judgment calls | Renames, find-replace across files, boilerplate from an explicit template, format conversions, moving files, extracting data, running a command and reporting output |
 | **Sonnet** | `sonnet` | Standard engineering with a clear spec | Well-scoped features, tests for existing behavior, refactors inside one module, CRUD endpoints, styling from a mockup, docs, straightforward bug fixes, diff review |
 | **Opus** | `opus` | Judgment-heavy pieces | Multi-file refactors, debugging with unclear cause, performance work, security-sensitive code, tricky edge cases, anything where a wrong local decision breaks other pieces |
+| **Fable** | `fable` | Top tier — only when a piece needs orchestrator-grade judgment and Opus would plausibly miss it | A self-contained architectural decision, an adversarial review of the whole plan, a piece whose wrong call invalidates every other agent's work. Most expensive — never a default, never for volume |
 | **Orchestrator** | (main loop — Fable, or Opus when Fable is unavailable) | Never delegated | The plan itself, decomposition, routing, resolving conflicts between agents' outputs, final verification, synthesis. Implements directly only when dispatch overhead exceeds the task, or after the escalation ladder is exhausted |
+
+Always pass the **alias** (`haiku` / `sonnet` / `opus` / `fable`), never a dated model id — the alias follows each new generation, a pinned id goes stale.
+
+`subagent_type: "fork"` ignores `model` entirely — a fork always inherits the orchestrator's model, so it is never a way to save tokens.
 
 Read-only reconnaissance (find where X lives, map a subsystem) goes to the **Explore** agent type — it's built for that and can run on `haiku`/`sonnet`.
 
@@ -66,7 +71,7 @@ Every dispatch prompt must be self-contained — the agent has none of this conv
   NOTES: <≤5 lines — only what the orchestrator must know>
   ```
 
-  No logs, no file dumps, no prose. This caps context cost and makes verification a scan.
+  No logs, no file dumps, no prose. This caps context cost and makes verification a scan. A return without `STATUS` and a real `VERIFIED-BY` (a command and its result, not "looks good") counts as **unverified** — bounce it once, and if it comes back the same, treat the piece as not done.
 
 If the deliverable is user-facing text or UI, state your writing/design guidelines inline in the prompt — the agent may not have access to your other skills.
 
@@ -87,7 +92,15 @@ When the plan contains many pieces of the same shape (~8+ — migrate N files, a
 
 - Haiku is the default for anything mechanical. Opus only where Sonnet would plausibly get it wrong.
 - Don't split a task thinner than its pieces are worth — five 30-second Haiku jobs are worse than one 3-minute Sonnet job.
-- Cap concurrent heavy agents (~5); queue the rest.
+- **Cap concurrency by the machine, not by ambition.** Every agent is its own process tree (CLI, node, often a browser). Default ~3 at once; go to 4-5 only when there's real free RAM (~5 GB+). Each agent holds **at most one headless browser**, closes it as soon as its step is done, and checks free memory before opening one. Measured: an uncapped parallel fan-out, every agent with its own Chrome, pushed a 54 GB machine to ~47 GB commit — everything paged and the desktop took minutes to recover.
+- **Turn cap — cache reads are the real bill.** Every turn re-reads the agent's whole context, so cost ≈ context size × turns. Measured: three uncapped Opus agents (two reviewers, one fact extraction; ~3,300 / ~2,000 / ~2,150 turns) burned ~2.85B tokens — 73% of everything spent in that window. Rules for every dispatch:
+  - State a turn budget in the prompt: **≤150 turns**. At ~120 the agent writes its progress to a file and returns `partial`; a FRESH agent continues from that file. Never keep a long agent alive with SendMessage for more than a nudge.
+  - One agent, one unit (one page, one module, one chapter) — never "the whole repo" in one agent.
+  - **Critic, review and fact-extraction agents default to `sonnet`.** If Opus must judge, it judges the written summary file in a short run.
+  - Images stay in context forever: review screenshots/frames as contact sheets; single full-size images only on suspicion (max ~8 per run).
+  - Command output goes to a log file; the agent reads the tail only.
+  - If you have a lean custom agent type with a small tool list and `maxTurns`, use it for long media/render work instead of general-purpose.
+  - After a run, check each agent's usage: one over ~150 tool uses is a finding to report, not a normal result.
 
 ## Context hygiene — keep the main conversation lean
 
@@ -113,4 +126,5 @@ The threat: the session hits its usage limit or gets compacted mid-dispatch, and
 
 When routing misses — a tier fails on work the table sent it, or an expensive tier was clearly unnecessary — append a dated line here so the table sharpens with real use instead of staying a guess:
 
-- (none yet)
+- 2026-10: uncapped reviewer/extraction agents on Opus were the single biggest cost line (see Turn cap) → reviews moved to Sonnet, ≤150-turn budget in every prompt.
+- 2026-10: too many parallel agents with one browser each exhausted RAM → concurrency capped at ~3 (5 with free RAM), one browser per agent.

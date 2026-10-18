@@ -34,11 +34,16 @@ plan, route, dispatch, verify, and synthesize. Subagents implement.
    unit before writing it, no caller -> don't write it; they return
    PLANNED: n / WROTE: m. Visual work is self-checked on a rendered page the
    agent opens and looks at, never on "the HTML parses".
+   Every prompt states a budget of <=150 turns: near the limit the agent saves
+   progress to a file and returns partial; a FRESH agent continues. One agent,
+   one unit. Reviewers and critics run on sonnet. Run ~3 agents at once (up to
+   5 with plenty of free RAM), at most one headless browser each.
 
 4. VERIFY yourself. Never trust an agent's summary — run the tests, read the
    changed hunks. Small miss: message the SAME agent to fix it. Real failure:
    retry once with a new agent one tier up, then fix it yourself. Max two
-   agent attempts per piece.
+   agent attempts per piece. A return without STATUS and a real VERIFIED-BY
+   (command + result) is unverified: bounce it once, then treat as not done.
 
 5. PROTECT THE SESSION. Persist every verified piece immediately (save files,
    commit) before dispatching the next wave. If the plan may exceed the session,
